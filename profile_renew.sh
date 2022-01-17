@@ -9,7 +9,7 @@ if ! [ $(id -u) = 0 ]; then
 	echo "Please run as root by appending sudo."
 	exit 1
 else
-	profiles renew -type enrollment -verbose | echo ~/profile_renew.log
+	profiles renew -type enrollment -verbose > ~/profile_renew.log
 	sleep 2
 	echo "Your Mac will restart in 5 minutes. Please save any work."
 	sleep 2
