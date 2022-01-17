@@ -6,7 +6,7 @@
 # This script can be sent to the user and ran to renew the profile and reboot
 
 if ! [ $(id -u) = 0 ]; then
-	echo "Please run as root by appending sudo."
+	echo "Please run this script with sudo."
 	exit 1
 else
 	profiles renew -type enrollment -verbose > ~/profile_renew.log
