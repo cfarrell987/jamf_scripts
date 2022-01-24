@@ -21,11 +21,6 @@ stagingDir="$homeDir/staging"
 varLogsDir="/private/var/log"
 diagReportsDir="/Library/Logs/DiagnosticReports"
 
-if ! [ $(id -u) = 0 ]; then
-	echo "Please run this script with sudo."
-	#exit 1
-fi
-
 echo $currentUser Date:$currentDate
 echo Device Info: 
 echo Serial No:$deviceSerial
@@ -41,7 +36,7 @@ cp -r $diagReportsDir $stagingDir
 
 # Compress all logs into gzip and move to user's desktop (temporary until upload solution is approved)
 cd $stagingDir
-tar -zcvf $homeDir/Desktop/compressedLogs.tar.gz ./*
+tar -zcvf $homeDir/Desktop/$currentUser-$deviceSerial-$currentDate-logs.tar.gz ./*
 
 #cleanup
 rm -r -f $stagingDir
