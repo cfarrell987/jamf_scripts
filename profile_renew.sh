@@ -23,5 +23,5 @@ echo "Please click on the Notification that has appeared in the top right. Follo
 sleep 5
 echo "Your Mac will restart in 5 minutes. Please save any work."
 sleep 2
-#shutdown -r +5
+shutdown -r +5
 sleep 2
