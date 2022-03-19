@@ -7,24 +7,33 @@
 #					Forces a restart within X defined time
 #		  Created By: Caleb Farrell <caleb.farrell@valhallahosting.ca>
 #         Created:  2022-03-18
-#   Last Modified:  2022-03-18
-#         Version:  1.0.0
+#   Last Modified:  2022-03-19
+#         Version:  1.1.0
 #
 ###
 
 #Specify how long until the restart
-MINUTES=10
+DEFER_MINUTES=60
 
 #Define the Logo Path, Will be unpacked from a DMG to this location
 LOGO=""
+
+#Define buttons
+button1="Defer 1 hour"
+button2="Reboot Now"
+DEFAULT_BUTTON="2"
+
+WINDOW_TYPE="hud"
+
 #Title of Notification
-PROMPT_TITLE="NOTICE:"
+PROMPT_TITLE="IT Dept Notice:"
 #Body of the Message
-PROMPT_MESSAGE="Your Mac will restart in $MINUTES minutes to resolve a compliance issue detected.
+PROMPT_MESSAGE="Your Mac will restart in $DEFER_MINUTES minutes to resolve a compliance issue detected.
 
 Please acknowledge this notice by clicking OK.
 
 If You have any concerns please contact support@email.com"
+
 exec 2>/dev/null
 
 #Error Handling Flag 
@@ -48,6 +57,15 @@ if [[ "$BAILOUT" == "true" ]]; then
 fi
 
 #Create A Jamf Helper Notification Window
-"$jamfHelper" -windowType "utility" -icon "$LOGO" -title "$PROMPT_TITLE" -description "$PROMPT_MESSAGE" -button1 "Ok" -defaultButton 1 -startlaunchd &>/dev/null
+USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -button1 "$button1" -button2 "$button2" -startlaunchd &>/dev/null)
 
-shutdown -r +$MINUTES
+
+if [ "$USER_CHOICE" == "0"]; then
+	echo "Choice 0"
+
+elif [ "$USER_CHOICE" == "2"]; then
+	echo "Choice 2"
+	exit 0
+fi
+
+#shutdown -r +$MINUTES
