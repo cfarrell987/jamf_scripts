@@ -7,7 +7,7 @@
 #					Forces a restart within X defined time
 #		  Created By: Caleb Farrell <caleb.farrell@valhallahosting.ca>
 #         Created:  2022-03-18
-#   Last Modified:  2022-03-19
+#   Last Modified:  2022-03-21
 #         Version:  1.1.0
 #
 ###
@@ -16,7 +16,7 @@ loggedInUser=$(stat -f%Su /dev/console)
 
 #Specify how long until the restart
 DEFER_MINUTES=60
-
+RESTART_DELAY=1
 #Define the Logo Path, Will be unpacked from a DMG to this location
 LOGO=""
 
@@ -29,7 +29,7 @@ WINDOW_TYPE="hud"
 
 #Title of Notification
 PROMPT_TITLE="IT Dept Notice:"
-#Body of the Message
+#Body of the Message, Edit within the double Quotes.
 PROMPT_MESSAGE="Your Mac will restart in $DEFER_MINUTES minutes to resolve a compliance issue detected.
 
 Please acknowledge this notice by clicking OK.
@@ -59,13 +59,13 @@ fi
 #Create A Jamf Helper Notification Window
 USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -button1 "$button1" -button2 "$button2")
 
-
 if [[ "$USER_CHOICE" == "0" ]]; then
 	echo "Rebooting in $DEFER_MINUTES Minutes."
+	shutdown -r +$DEFER_MINUTES
 	
 elif [[ "$USER_CHOICE" == "2" ]]; then
 	echo "Rebooting now!"
+	shutdown -r +$RESTART_DELAY
 	exit 0
 fi
 
-#shutdown -r +$MINUTES
