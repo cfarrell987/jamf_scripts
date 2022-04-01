@@ -15,14 +15,16 @@
 loggedInUser=$(stat -f%Su /dev/console)
 
 #Specify how long until the restart
-DEFER_MINUTES=60
-RESTART_DELAY=1
+DEFER_MINUTES=420
+declare -i DEFER_MINUTES
+DEFER_HOURS=`expr $DEFER_MINUTES / 60`
 TIMEOUT=600
+RESTART_DELAY=1
 #Define the Logo Path, Will be unpacked from a DMG to this location
-LOGO=""
+LOGO="/Library/Application Support/Introhive/IntrohiveLogo.png"
 
 #Define buttons
-button1="Defer 1 hour"
+button1="Defer $DEFER_HOURS hours"
 button2="Reboot Now"
 DEFAULT_BUTTON="2"
 
@@ -58,15 +60,14 @@ if [[ "$BAILOUT" == "true" ]]; then
 fi
 
 #Create A Jamf Helper Notification Window
-USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -timeout "$timeout" -button1 "$button1" -button2 "$button2")
+USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -timeout "$TIMEOUT" -button1 "$button1" -button2 "$button2")
 
 if [[ "$USER_CHOICE" == "0" ]]; then
 	echo "Rebooting in $DEFER_MINUTES Minutes."
 	shutdown -r +$DEFER_MINUTES
-	
+
 elif [[ "$USER_CHOICE" == "2" ]]; then
 	echo "Rebooting now!"
 	shutdown -r +$RESTART_DELAY
-	exit 0
+  exit 0
 fi
-
