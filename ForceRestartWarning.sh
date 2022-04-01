@@ -17,6 +17,7 @@ loggedInUser=$(stat -f%Su /dev/console)
 #Specify how long until the restart
 DEFER_MINUTES=60
 RESTART_DELAY=1
+TIMEOUT=600
 #Define the Logo Path, Will be unpacked from a DMG to this location
 LOGO=""
 
@@ -57,7 +58,7 @@ if [[ "$BAILOUT" == "true" ]]; then
 fi
 
 #Create A Jamf Helper Notification Window
-USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -button1 "$button1" -button2 "$button2")
+USER_CHOICE=$("$jamfHelper" -windowType "$WINDOW_TYPE" -lockHUD -icon "$LOGO" -title "$PROMPT_TITLE" -defaultButton "$DEFAULT_BUTTON" -description "$PROMPT_MESSAGE" -timeout "$timeout" -button1 "$button1" -button2 "$button2")
 
 if [[ "$USER_CHOICE" == "0" ]]; then
 	echo "Rebooting in $DEFER_MINUTES Minutes."
